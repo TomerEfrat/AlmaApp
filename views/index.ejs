@@ -1,0 +1,215 @@
+<%- include('partials/header.ejs'); -%>
+<div class="container"></div>
+  <div class="add-sku">
+    <h1 style="font-family:'Rubik'; font-size: 30px; text-decoration-line: underline;">מערכת למעקב חוסרים</h1>
+    <form class="box" action="/add" method="post">
+      <input type="text" id="skuInput" name="newSku" placeholder="נא הזן מק''ט כאן" oninput="toggleButton()" autocomplete="off">
+      <button class="addbtn" type="submit" id="addBtn" onclick="checkInput()">הוסף מק"ט לרשימה</button>
+    </form>
+  </div>
+
+  <div class="table-container">
+    <table class="sku-table">
+      <thead>
+        <tr>
+          <th>מק"ט</th>
+          <th>תאריך הוספת מק"ט</th>
+          <th>הוזמן</th>
+          <th>הוזמן בתאריך</th>
+          <th>הגיע</th>
+          <th>הגיע בתאריך</th>
+          <th>מחיקה</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% for(let sku_code of listsku){ %>
+        <tr class="sku">
+          <td id="sku_code<%=sku_code.id%>">
+            <%= sku_code.sku_code %>
+          </td>
+          <td id="date_added<%=sku_code.id%>">
+            <% if (sku_code.date_added) { %>
+            <%= new Date(sku_code.date_added).toLocaleDateString('en-GB') %>
+            <% } %>
+          </td>
+          <td>
+            <form id="orderForm<%= sku_code.id %>" action="/updateDateOrder" method="post">
+              <input type="checkbox" name="dateOrderChecked" onchange="handleCheckboxChange1(this)" data-form-id="orderForm<%= sku_code.id %>" 
+                <% if (sku_code.ordered) { %> checked <% } %>>
+                <input type="hidden" name="updatedskuId" value="<%= sku_code.id %>">
+            </form>
+          </td>
+          <td id="order<%=sku_code.id%>">
+            <% if (sku_code.order_date) { %>
+            <%= sku_code.order_date.toLocaleDateString('en-GB') %>
+            <% } %>
+          </td>
+          <td>
+            <form id="arrivalForm<%= sku_code.id %>" action="/updateDateArrival" method="post">
+              <input type="checkbox" name="dateArrivalChecked" onchange="handleCheckboxChange(this)" data-form-id="arrivalForm<%= sku_code.id %>" <% if (sku_code.arrived) { %> checked <% } %>>
+              <input type="hidden" name="updatedskuId2" value="<%= sku_code.id %>">
+            </form>
+          </td>
+          <td id="arrival_date<%=sku_code.id%>">
+            <% if (sku_code.arrival_date) { %>
+            <%= sku_code.arrival_date.toLocaleDateString('en-GB') %>
+            <% } %>
+          </td>
+          <td>
+            <form action="/delete" method="post" onsubmit="return confirmDelete()">
+              <input type="hidden" name="deleteskuId" value="<%= sku_code.id %>">
+              <button class="delete-btn" type="submit">מחיקה</button>
+            </form>
+          </td>
+        </tr>
+        <% } %>
+        <td>
+          <button class="export-btn" onclick="exportToExcel()">Export to Excel</button>
+        </td> 
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs'); -%>
+
+<script>
+  function toggleButton() {
+    var skuInput = document.getElementById("skuInput");
+    var addBtn = document.getElementById("addBtn");
+
+    // Enable the button if SKU input is not empty, otherwise disable it
+    if (skuInput.value.trim() !== "") {
+      addBtn.disabled = false;
+    } else {
+      addBtn.disabled = true;
+    }
+  }
+
+  function checkInput() {
+    var skuInput = document.getElementById("skuInput");
+    var placeholderText = "נא הזן מק''ט כאן";
+
+    // Check if input field is empty
+    if (skuInput.value.trim() === "") {
+      // Highlight the placeholder text in the input field
+      skuInput.placeholder = "יש להזין כאן את המק''ט להוספה";
+// Prevent form submission
+      event.preventDefault();
+    } else {
+      // Reset the placeholder text and color
+
+      skuInput.placeholder = placeholderText;
+    }
+  }
+</script>
+
+
+<script>
+  function handleCheckboxChange1(checkbox) {
+    var form = checkbox.closest('form');
+    
+    if (checkbox.checked) {
+      form.submit();
+    } else {
+      deleteOrder(form);
+    }
+  }
+
+  function deleteOrder(form) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/deleteDateOrder", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Refresh the page or update the UI as needed
+        window.location.reload();
+      }
+    };
+    var formData = new FormData(form);
+    xhr.send(new URLSearchParams(formData).toString());
+  }
+</script>
+
+
+<script>
+  function handleCheckboxChange(checkbox) {
+    var form = checkbox.closest('form');
+    if (checkbox.checked) {
+      form.submit();
+    } else {
+      deleteDate(form);
+    }
+  }
+
+  function deleteDate(form) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/deleteDate", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Refresh the page or update the UI as needed
+        window.location.reload();
+      }
+    };
+    var formData = new FormData(form);
+    xhr.send(new URLSearchParams(formData).toString());
+  }
+</script>
+
+<script>
+  function exportToExcel() {
+    const table = document.querySelector('.sku-table');
+    const tableData = [];
+
+    // Define the indices of the columns you want to export
+    const columnIndices = {
+        'מק"ט': -1,
+        'תאריך הוספת מק"ט': -1,
+        'הוזמן בתאריך': -1,
+        'הגיע בתאריך': -1
+    };
+
+    // Get table headers (titles)
+    const headers = [];
+    table.querySelectorAll('thead th').forEach((header, index) => {
+        const headerText = header.textContent.trim();
+        if (headerText in columnIndices) {
+            columnIndices[headerText] = index;
+            headers.push(headerText);
+        }
+    });
+    tableData.push(headers);
+
+    // Get table rows
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+
+        // Get data from selected columns in the row
+        for (const column of Object.values(columnIndices)) {
+            if (column !== -1) {
+                const cell = row.querySelectorAll('td')[column];
+                rowData.push(cell.textContent.trim());
+            }
+        }
+
+        // Push row data to table data array
+        tableData.push(rowData);
+    });
+
+    // Create a worksheet from the table data
+    const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+
+    // Create a new workbook and add the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+    // Save the workbook as an Excel file
+    XLSX.writeFile(workbook, 'table.xlsx');
+  }
+
+  function confirmDelete() {
+    return confirm('בטוח שברצונך למחוק את המק"ט מהרשימה?');
+  }
+</script>

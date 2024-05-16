@@ -1,0 +1,180 @@
+/* Reset CSS */
+
+body {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+.img-container {
+  /* Ensure the container takes up the entire viewport */
+  position: top;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Center the image horizontally and vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Limit the size of the image to fit within the container */
+  max-width: 100%; /* Adjust as needed */
+  padding: 10px;
+}
+.img-container img {
+  /* Ensure the image resizes proportionally */
+  width: 100%;
+  height: auto;
+  /* Add additional styles as needed */
+}
+.add-sku {
+  margin-bottom: 2px; /* Reduce the bottom margin */
+  margin-top: -50px; /* Add top margin to create space */
+  text-align: center;
+}
+
+.container {
+  width: 100%; /* Set container width to 90% of the viewport width */
+  max-width: 1200px; /* Limit maximum width to 1200px */
+  min-width: 320px; /* Set minimum width to ensure usability on small screens */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 20px; /* Add padding to the container */
+  box-sizing: border-box; /* Include padding and border in the total width */
+}
+
+h1 {
+  margin-top: 0px;
+  color: #470255;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.249);
+}
+
+/*תיבת טקסט */
+#skuInput {
+  width: 600px; /* Adjust the width of the text box as needed */
+  height: 45px;
+  margin-bottom: 10px;
+}
+.table-container {
+  padding: 20px;
+  text-align: center;
+  
+}
+
+input[type="text"] {
+  width: 70%;
+  height: 40px;
+  padding: 8px 15px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  background-color: white;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  font-family: Calibri
+}
+
+
+.add-sku button {
+  height:45px;
+  padding: 8px 15px;
+  background-color: #442C5B;
+  color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: Calibri
+  
+}
+
+.add-sku button:hover {
+  background-color: #F5F4F6;
+  color: #442C5B;
+  border: 3px solid #442C5B;
+}
+
+.sku-table{
+  width: 90%; /* Set container width to 90% of the viewport width */
+  max-width: 1200px; /* Limit maximum width to 1200px */
+  min-width: 320px; /* Set minimum width to ensure usability on small screens */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 20px; /* Add padding to the container */
+  box-sizing: border-box; /* Include padding and border in the total width */
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* שורות לבנות (החל משורה ראשונה) */
+.sku-table th,
+.sku-table td {
+  padding: 10px;
+  border: 2% solid #fffcfc;
+  text-align: center;
+  color: #000; /* Ensures text color is black */
+  font-size: 18px;
+}
+
+/* שורת כותרות */
+.sku-table th {
+  background-color: #DAE7EB;
+  font-weight: bold;
+  color: #000; /* Ensures text color is black */
+  font-size: 20px; 
+}
+/* שורות אפורות */
+.sku-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+  color: #000;
+  font-size: 18px;
+}
+/* Export to Excel button */
+.export-btn {
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-top: 20px;
+  background-color: #014e70f0;
+  color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 18px;
+}
+
+.export-btn:hover {
+  background-color:#dae7ebda;
+  color: #014e70f0;
+  border: 3px solid #014e70f0;
+
+}
+
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  background-color: #fff;
+  border: 2px solid #aaa;
+  accent-color:#014e70f0;
+  border-radius: 5px;
+  /* Add some padding to the checkbox */
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  /* Position the checkbox relative to its container */
+  position: relative;
+}
+.delete-btn {
+  font-weight: bold;
+  height: 30px;
+  background-color: #c20303c0;
+  color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 18px;
+  font-family: Calibri
+}
+
+.delete-btn:hover {
+  background-color:#c203031d;
+  color: #c20303c0;
+  border: 3px solid #c20303c0;
+
+}
